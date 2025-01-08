@@ -5,3 +5,198 @@
  Version: 1.0
  Description: Thème enfant pour un portfolio dynamique avec Astra
 */
+
+/*********** HEADER **********/
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 90px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 4px 15px 1px #e606b2;
+    ;
+}
+nav {
+    display: inline-flex;
+}
+
+.logo {
+    padding-left: 178px;
+}
+
+.logo img {
+    width: 100px;
+}
+
+.menu {
+    padding-left: 529px;
+    margin-top: 20px;
+}
+
+.menu-links {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    padding: 0;
+    gap: 25px;
+}
+.menu-links li {
+    list-style-type: none;
+}
+
+.menu-links li a {
+    text-decoration: none;
+    font-family: "Space Mono", monospace;
+    font-size: 1.125rem;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--full-black);
+    margin-bottom: 0;
+}
+
+.menu-links li a:hover {
+    color: #e606b2;
+    font-weight: 900;
+}
+
+.page .entry-header {
+   display: none !important;
+}
+
+header .custom-logo-link img {
+    max-width: 250px !important;
+    width: 100px;
+}
+
+.archive-projets, .single-projet, .contact-page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.projets-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.projet-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    transition: transform 0.3s ease;
+}
+
+.projet-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.single-projet img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.contact-page {
+    text-align: center;
+}
+
+.contact-page form {
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Hero Banner  */
+.hero-banner {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+
+
+.hero-content{
+    width: 1000px;
+    height: 200px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 30px 30px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 15px #b20d8e7b;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+      
+.hero-content h1 {
+        position: relative;
+        height: 130px;
+        overflow: hidden;
+        border-bottom: 2px solid #ffffff;
+        color: #b20d8d;
+        text-shadow: 3px 3px 3px #ffffff;
+        font-size: 90px;
+        font-weight:900;
+}
+
+.hero-content span {
+    display: inline-block;
+    width: 310px;
+    height: 90px;
+    line-height: 90px;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute;
+    font-size: 44px;
+    background: #3963be;
+    bottom: -5rem;
+    opacity: 0;
+    right: 0;
+    animation: anim-1 8s ease-in infinite;
+  }
+  
+  
+  @keyframes anim-1 {
+    0% {
+      bottom: -5rem;
+      right: 0;
+      opacity: 0
+    }
+  
+    25% {
+      bottom: 5px;
+      right: 0;
+      opacity: 1;
+    }
+  
+    50% {
+      bottom: -8rem;
+      right: 0;
+      opacity: 0
+    }
+  
+    100% {
+      bottom: -8rem;
+      right: 0;
+      opacity: 0
+    }
+  
+  }
+  
+  
+  span:nth-child(2) {
+    animation-delay: 4s;
+  }
+  
+  span:nth-child(3) {
+    animation-delay: 6s;
+  }
+  
+  span:nth-child(4) {
+    animation-delay: 8s;
+  }
