@@ -10,7 +10,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <?php wp_head(); ?>
 </head>
-<body>
+<body> 
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
 <header>
     <nav>
         <div class="logo">

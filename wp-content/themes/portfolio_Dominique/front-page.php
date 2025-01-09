@@ -17,25 +17,69 @@ get_header();
 
 
 <?php
-if (have_posts()) : while (have_posts()) : the_post();
-?>
-    <div class="single-projet">
-        
-        <div class="projet-image">
-            <?php 
-            if (get_field('image_du_projet')) {
-                echo '<img src="' . get_field('image_du_projet') . '" alt="' . get_the_title() . '">';
-            }
-            ?>
-        </div>
-        <div class="projet-description">
-            <p><?php the_content(); ?></p>
-            <h1><?php the_title(); ?></h1>
-            <p><strong>Description :</strong> <?php the_field('description'); ?></p>
-            <p><strong>Technologies utilisées :</strong> <?php the_field('technologies_utilisees'); ?></p>
-            <p><a href="<?php the_field('url_du_projet'); ?>" target="_blank">Voir le projet</a></p>
-        </div>
-    </div>
-<?php
-endwhile; endif;
+// Boucle pour afficher les projets //
+$args = array(
+    'post_type'      => 'projets',
+    'posts_per_page' => 8,
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+    'paged'          => 1,
+);
+
+$query = new WP_Query($args);
+
+if ($query->have_posts()) :
+    echo '<div class="projets-gallery">';
+    while ($query->have_posts()) : $query->the_post(); 
+        $categories = get_the_terms(get_the_ID(), 'categorie'); // Récupère les catégories
+        $technologies = get_field('technologies_utilisees');   // Champ personnalisé (ACF)
+        $url_projet = get_field('url_du_projet');              // Champ personnalisé (ACF)
+        $description = get_field('description');              // Champ personnalisé (ACF)
+
+        // Vérification de l'erreur pour les catégories
+        if (!is_wp_error($categories) && !empty($categories)) {
+            $category_name = esc_html($categories[0]->name);
+        } else {
+            $category_name = 'Non catégorisé';
+        }
+        ?>
+        <article class="projet-item">
+            <div class="projet-wrapper">
+                <?php 
+                if (has_post_thumbnail()) {
+                    the_post_thumbnail('original', [
+                        'class' => 'projet-thumbnail',
+                        'alt'   => esc_attr(get_the_title()),
+                        'data-category' => $category_name,
+                    ]);
+                } else {
+                    echo '<img src="' . get_stylesheet_directory_uri() . '/Images/placeholder.jpg" alt="Image non disponible" class="projet-thumbnail" data-category="' . $category_name . '">';
+                }
+                ?>
+                <div class="projet-overlay">
+                    <div class="projet-info">
+                        <h3 class="projet-title"><?php the_title(); ?></h3>
+                        <p class="projet-category"><?php echo $category_name; ?></p>
+                    </div>
+                    <div class="projet-icons">
+                         <!-- Icône pour aller à la page single-photo.php -->
+                         <a href="<?php the_permalink(); ?>" class="icon icon-view" aria-label="Voir la page">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <!-- Icône pour ouvrir la lightbox -->
+                        <a href="#" class="icon icon-lightbox" data-photo-id="<?php echo get_the_ID(); ?>" aria-label="Voir dans la lightbox">
+                            <i class="fas fa-expand"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    <?php endwhile;
+    echo '</div>';
+    echo '<button id="load-more-projets" data-page="2">Charger plus</button>';
+    wp_reset_postdata();
+else :
+    echo '<p>Aucun projet trouvé.</p>';
+endif;
+
 get_footer();

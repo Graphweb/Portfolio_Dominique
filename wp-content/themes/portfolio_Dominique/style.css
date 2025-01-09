@@ -6,6 +6,49 @@
  Description: Thème enfant pour un portfolio dynamique avec Astra
 */
 
+/*********** BODY *********/
+
+html {
+    height:100%;
+  }
+  
+  body {
+    font-family: 'poppins';
+    margin:0;
+    background-image:url(https://nchinc.com/landingpage/llc-nevada-selection/images/backgorund.jpg)
+  }
+  
+  .bg {
+    animation:slide 3s ease-in-out infinite alternate;
+    background-image: linear-gradient(-60deg, #1c88edfd 50%, #b20d8e 50%);
+    bottom:0;
+    left:-50%;
+    opacity:.2;
+    position:fixed;
+    right:-50%;
+    top:0;
+    z-index:-1;
+  }
+  
+  .bg2 {
+    animation-direction:alternate-reverse;
+    animation-duration:4s;
+  }
+  
+  .bg3 {
+    animation-duration:5s;
+  }
+  
+  
+  @keyframes slide {
+    0% {
+      transform:translateX(-5%);
+    }
+    100% {
+      transform:translateX(5%);
+    }
+  }
+
 /*********** HEADER **********/
 header {
     display: flex;
@@ -14,15 +57,14 @@ header {
     width: 100%;
     height: 90px;
     background-color: rgb(255, 255, 255);
-    box-shadow: 0px 4px 15px 1px #e606b2;
-    ;
 }
+
 nav {
     display: inline-flex;
 }
 
 .logo {
-    padding-left: 178px;
+    padding-left: 170px;
 }
 
 .logo img {
@@ -30,7 +72,7 @@ nav {
 }
 
 .menu {
-    padding-left: 529px;
+    padding-left: 800px;
     margin-top: 20px;
 }
 
@@ -64,6 +106,7 @@ nav {
     font-weight: 900;
 }
 
+
 .page .entry-header {
    display: none !important;
 }
@@ -73,45 +116,7 @@ header .custom-logo-link img {
     width: 100px;
 }
 
-.archive-projets, .single-projet, .contact-page {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-}
-
-.projets-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.projet-item {
-    border: 1px solid #ddd;
-    padding: 15px;
-    transition: transform 0.3s ease;
-}
-
-.projet-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.single-projet img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-.contact-page {
-    text-align: center;
-}
-
-.contact-page form {
-    max-width: 600px;
-    margin: auto;
-}
-
-/* Hero Banner  */
+/****** Hero Banner ********/
 .hero-banner {
     background-size: cover;
     background-position: center;
@@ -119,7 +124,7 @@ header .custom-logo-link img {
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;  
+    align-items: center; 
 }
 
 
@@ -153,7 +158,7 @@ header .custom-logo-link img {
     border-radius: 5px;
     position: absolute;
     font-size: 44px;
-    background: #3963be;
+    background: #1c89ed;
     bottom: -5rem;
     opacity: 0;
     right: 0;
@@ -165,7 +170,7 @@ header .custom-logo-link img {
     0% {
       bottom: -5rem;
       right: 0;
-      opacity: 0
+      opacity: 0;
     }
   
     25% {
@@ -175,28 +180,209 @@ header .custom-logo-link img {
     }
   
     50% {
-      bottom: -8rem;
+      bottom: -12rem;
       right: 0;
-      opacity: 0
+      opacity: 0;
     }
-  
-    100% {
-      bottom: -8rem;
+    75% {
+      bottom: -12rem;
       right: 0;
-      opacity: 0
+      opacity: 0;
+    }
+   
+    100% {
+      bottom: -18rem;
+      right: 0;
+      opacity: 1;
     }
   
   }
   
   
   span:nth-child(2) {
-    animation-delay: 4s;
+    animation-delay: 2s;
   }
   
   span:nth-child(3) {
-    animation-delay: 6s;
+    animation-delay: 4s;
   }
   
   span:nth-child(4) {
-    animation-delay: 8s;
+    animation-delay: 6s;
+  }
+/********************* GALERIES ACCUEIL *******************************/
+
+.projets-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; 
+}
+
+/* Style des images */
+.projet-item img {
+    width: 564px;
+    height: 495px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.projet-item {
+    width: 564px;
+    height: 495px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    box-shadow: 5px 5px 15px #b20d8e90;
+    margin: 90px;
+}
+
+.projet-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.projet-thumbnail {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+    
+}
+
+.projet-info h3,
+.projet-category {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 21px;
+    text-align: left;
+    margin: 0;
+    color: #ffffff !important;
+}
+
+.projet-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 564px;
+    height: 495px;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    transition: opacity 0.3s ease;
+}
+
+.projet-item:hover .projet-overlay {
+    opacity: 1;
+}
+
+.projet-info {
+    display: flex;
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    color: white;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+    gap: 10px; 
+    flex-direction: row; 
+    justify-content: space-between;  
+    width: 90%; 
+}
+
+.projet-icons {
+    display: flex;
+    gap: 10px;
+}
+.projet-icons a {
+    color: #fff;
+    font-size: 20px;
+}
+
+.icon-view i, .icon-live i {
+    transition: color 0.3s ease;
+}
+
+.icon:hover {
+    scale: 0.8;
+}
+
+/* Position spécifique des icônes */
+.icon-view {
+    position: relative; 
+    left: 50%;
+    width: 50px;
+    height: 30px;
+    transform: translate(-50%, -50%); 
+    background: url('images/Icon_eye.svg') center center / 100% 100%;
+}
+
+.icon-lightbox {
+    position: relative;
+    top: -650%; 
+    left: 170%;
+    width: 50px;
+    height: 30px;
+    background: url('images/Icon_focus.svg') center center / 100% 100%;
+}
+/****************** contact single-projet *****************************/
+#contact { 
+    margin: 4em auto;
+    width: 100px; 
+    height: 30px; 
+    line-height: 30px;
+    background: #b20d8d;
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid white;
+  }
+  
+  #contact:hover { background: #1c88edba; }
+  #contact:active { background: #444; }
+  
+  #contactForm { 
+    display: none;
+    position: fixed;
+    border: 6px solid #ffffff; 
+    padding: 2em;
+    width: 600px;
+    text-align: center;
+    background: #fff;
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    box-shadow: 5px 5px 15px #b20d8e90;
+  }
+  
+  input, textarea, input[type="text"], input[type="email"] { 
+    margin: .8em auto;
+    font-family: 'poppins'; 
+    text-transform: inherit; 
+    font-size: 14px;
+    display: block; 
+    padding: .4em;
+  }
+  textarea { height: 80px; resize: none; }
+  
+  .formBtn { 
+    width: 170px !important;
+    display: inline-block !important;
+    text-decoration: #ddd !important;
+    background: #b20d8d !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    font-size: 1.2em !important;
+    border: solid 1px #00000008!important;
+    height: 30px !important;
+    box-shadow: 5px 5px 15px #00000090 !important;
   }
