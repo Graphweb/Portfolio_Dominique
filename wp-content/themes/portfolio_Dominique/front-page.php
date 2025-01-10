@@ -15,12 +15,40 @@ get_header();
    
 </section>
 
+<section id="about-section" class="about-section">
+    <div class="about-container">
+        <!-- Colonne image -->
+        <div class="about-image">
+            <img src="wp-content\themes\portfolio_Dominique\images\moi-1.jpg" alt="À propos de moi">
+        </div>
+        
+        <!-- Colonne texte -->
+        <div class="about-content">
+            <h2>À propos de moi</h2>
+            <p>
+            Diplômée d'un BEP Couture Flou des Industries Connexes et d'une mention complémentaire, j'ai eu envie d'une reconversion professionnelle et je me décide après la crise COVID-19, de changer de toile fillaire à celle du numérique.
+            Je suis une personne très assidue et apprendre de nouvelles choses me passionne. J'ai découvert le graphisme et la suite ADOBE que j'adore et me perfectionne au fil du temps ! Je suis actuellement en formation de "Concepteur Designer UI" afin d'obtenir le Titre Professionnel.
+            En dehors du cadre professionnel, je suis une addict de cinéma, j'aime jouer avec mes chiens, aller à la plage, aller en montagne et se ressourcer en pleine nature.
+            </p>
+            <button id="view-cv-btn" class="btn">Voir mon CV</button>
+        </div>
+    </div>
+
+    <!-- Visionneuse modale pour le CV -->
+    <div id="cv-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <iframe src="wp-content\themes\portfolio_Dominique\pdf\CV cdui.pdf" frameborder="0"></iframe>
+        </div>
+    </div>
+</section>
+
 
 <?php
 // Boucle pour afficher les projets //
 $args = array(
     'post_type'      => 'projets',
-    'posts_per_page' => 8,
+    'posts_per_page' => 4,
     'orderby'        => 'date',
     'order'          => 'DESC',
     'paged'          => 1,

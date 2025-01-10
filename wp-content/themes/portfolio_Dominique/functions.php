@@ -14,14 +14,12 @@ function enqueue_lightbox_scripts() {
 }
 add_action('wp_enqueue_scripts', 'enqueue_lightbox_scripts');
 
-/* ************ ENQUEUE AJAX SCRIPT ************** */
-function enqueue_load_more_script() {
-    // Charger le script JavaScript
-    wp_enqueue_script('load-more-photos', get_stylesheet_directory_uri() . '', array('jquery'), null, true);
-    // Localiser le script pour ajouter la variable ajaxurl
-    wp_localize_script('load-more-photos', 'ajaxurl', admin_url('admin-ajax.php'));
+/* ************ VISSIONNEUSE CSS ET JS ************** */
+function enqueue_visionneuse_scripts() {
+    wp_enqueue_style('visionneuse-css', get_stylesheet_directory_uri() . '/css/visionneuse.css', array(), '1.0', 'all');
+    wp_enqueue_script('visionneuse-js', get_stylesheet_directory_uri() . '/js/visionneuse.js', array('jquery'), '1.0', true);
 }
-add_action('wp_enqueue_scripts', 'enqueue_load_more_script');
+add_action('wp_enqueue_scripts', 'enqueue_visionneuse_scripts');
 
 /* **************** INCLURE JQUERY DEPUIS WORDPRESS ************* */
 function custom_enqueue_scripts() {
@@ -58,7 +56,7 @@ function get_random_hero_image() {
     return $images[array_rand($images)];
 }
 
-
+/**************************** ACF ************************************************* */
 // Enregistrer un template pour les CPT "Projets"
 function portfolio_register_templates() {
     if (is_singular('projets')) {
@@ -68,5 +66,83 @@ function portfolio_register_templates() {
 }
 add_action('template_redirect', 'portfolio_register_templates');
 
+/******************************* CHARGER PLUS AJAX ******************************************** */
+
+function load_more_projets() { 
+    // Vérifie que les paramètres nécessaires sont présents
+    if (!isset($_POST['page']) || !isset($_POST['posts_per_page'])) {
+        wp_send_json_error(['message' => 'Paramètres manquants.']);
+    }
+
+    // Récupère les paramètres
+    $page = intval($_POST['page']);
+    $posts_per_page = intval($_POST['posts_per_page']);
+
+    // Arguments de la requête
+    $args = array(
+        'post_type'      => 'projets', // Assurez-vous que le post_type est bien "projets"
+        'posts_per_page' => $posts_per_page,
+        'paged'          => $page,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    );
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) :
+        ob_start(); // Capture le contenu HTML
+        while ($query->have_posts()) : $query->the_post(); ?>
+             <article class="projet-item">
+            <div class="projet-wrapper">
+                <?php 
+                if (has_post_thumbnail()) {
+                    the_post_thumbnail('original', [
+                        'class' => 'projet-thumbnail',
+                        'alt'   => esc_attr(get_the_title()),
+                        'data-category' => $category_name,
+                    ]);
+                } else {
+                    echo '<img src="' . get_stylesheet_directory_uri() . '/Images/placeholder.jpg" alt="Image non disponible" class="projet-thumbnail" data-category="' . $category_name . '">';
+                }
+                ?>
+                <div class="projet-overlay">
+                    <div class="projet-info">
+                        <h3 class="projet-title"><?php the_title(); ?></h3>
+                        <p class="projet-category"><?php echo $category_name; ?></p>
+                    </div>
+                    <div class="projet-icons">
+                         <!-- Icône pour aller à la page single-photo.php -->
+                         <a href="<?php the_permalink(); ?>" class="icon icon-view" aria-label="Voir la page">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <!-- Icône pour ouvrir la lightbox -->
+                        <a href="#" class="icon icon-lightbox" data-photo-id="<?php echo get_the_ID(); ?>" aria-label="Voir dans la lightbox">
+                            <i class="fas fa-expand"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <?php endwhile;
+        $content = ob_get_clean(); // Récupère le contenu généré
+        wp_send_json_success($content); // Renvoie le contenu sous forme JSON
+    else :
+        wp_send_json_error(['message' => 'Aucun projet trouvé.']);
+    endif;
+
+    wp_reset_postdata();
+    wp_die(); // Termine proprement le script
+}
+add_action('wp_ajax_load_more_projets', 'load_more_projets'); // Renommer l'action en "load_more_projets"
+add_action('wp_ajax_nopriv_load_more_projets', 'load_more_projets'); // Renommer pour les utilisateurs non connectés
 
 
+/*************************************************** */
+function enqueue_load_more_script() {
+    // Charger le script JavaScript
+    wp_enqueue_script('load-more-projets', get_stylesheet_directory_uri() . '/js/load-more-projets.js', array('jquery'), null, true); // Nom plus approprié
+
+    // Localiser le script pour ajouter la variable ajaxurl
+    wp_localize_script('load-more-projets', 'ajaxurl', admin_url('admin-ajax.php')); // Utiliser le même nom de script
+}
+add_action('wp_enqueue_scripts', 'enqueue_load_more_script');

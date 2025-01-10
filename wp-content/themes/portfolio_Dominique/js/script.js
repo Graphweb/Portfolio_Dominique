@@ -1,5 +1,12 @@
-jQuery(function ($) { // $ est défini ici
-    // Contact form animations
+
+
+
+
+
+
+
+jQuery(function ($) { 
+    // CONTACT FORM ANIMATIONS
     $('#contact').click(function () {
         $('#contactForm').fadeToggle();
     });

@@ -6,17 +6,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const closeButton = document.querySelector(".lightbox-close");
   const prevButton = document.querySelector(".lightbox-prev");
   const nextButton = document.querySelector(".lightbox-next");
-  let currentPhotoIndex = 0;
+  let currentProjetIndex = 0;
 
-  // Fonction pour récupérer les photos actuelles dans le DOM
+  // Fonction pour récupérer les projets actuels dans le DOM
   function getProjets() {
     return document.querySelectorAll(".projet-item img");
   }
 
-  // Affiche la lightbox avec la photo donnée
+  // Affiche la lightbox avec le projet donné
   function showLightbox(projet) {
     const originalSrc = projet.src.replace(/-\d+x\d+(.\w+)$/, "$1"); // Remplace les dimensions par l'original
-    const category = photo.dataset.category; // Récupère la catégorie
+    const category = projet.dataset.category; // Récupère la catégorie
     lightboxOverlay.style.display = "flex"; // Affiche la lightbox
     lightboxImage.src = originalSrc; // Charge l'image originale
     lightboxTitle.textContent = projet.alt || "Projet"; // Définit le titre
@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add("no-scroll"); // Ajoute la classe pour désactiver le scroll
   }
 
-// Met à jour la lightbox pour une nouvelle photo
+  // Met à jour la lightbox pour une nouvelle photo
   function updateLightbox() {
-    const projets = getProjets(); // Récupère les photos actuelles
-    const newProjet = projets[currentProjetIndex]; // Photo actuelle
+    const projets = getProjets(); // Récupère les projets actuels
+    const newProjet = projets[currentProjetIndex]; // Projet actuel
     const category = newProjet.dataset.category; // Récupère la catégorie
     const originalSrc = newProjet.src.replace(/-\d+x\d+(.\w+)$/, "$1"); // Remplace les dimensions
     lightboxImage.src = originalSrc; // Charge l'image originale
@@ -40,12 +40,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const icon = e.target.closest(".icon-lightbox");
     if (icon) {
       e.preventDefault(); // Empêche le comportement par défaut
-      const projets = getProjets(); // Récupère les photos actuelles
+      const projets = getProjets(); // Récupère les projets actuels
       currentProjetIndex = Array.from(projets).findIndex((projet) =>
         projet.closest(".projet-item").contains(icon)
-      ); // Trouve l'index de la photo associée
+      ); // Trouve l'index du projet associé
       if (currentProjetIndex !== -1) {
-        showLightbox(projet[currentProjetsIndex]);
+        showLightbox(projets[currentProjetIndex]);
       }
     }
   });
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Bouton de fermeture
   closeButton.addEventListener("click", closeLightbox);
 
-// Fermeture en cliquant en dehors de l'image
+  // Fermeture en cliquant en dehors de l'image
   lightboxOverlay.addEventListener("click", function (e) {
     if (e.target === lightboxOverlay) {
       closeLightbox();
@@ -71,16 +71,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Navigation vers la photo précédente
   prevButton.addEventListener("click", function () {
-    const projets = getProjets(); // Récupère les photos actuelles
+    const projets = getProjets(); // Récupère les projets actuels
     currentProjetIndex = (currentProjetIndex - 1 + projets.length) % projets.length; // Reculer
     updateLightbox();
   });
 
   // Navigation vers la photo suivante
   nextButton.addEventListener("click", function () {
-    const projet = getPhotos(); // Récupère les photos actuelles
-    currentProjetIndex = (currentPhotoIndex + 1) % projets.length; // Avancer
+    const projets = getProjets(); // Récupère les projets actuels
+    currentProjetIndex = (currentProjetIndex + 1) % projets.length; // Avancer
     updateLightbox();
   });
 });
-

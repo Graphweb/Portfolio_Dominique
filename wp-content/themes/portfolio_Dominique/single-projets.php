@@ -58,8 +58,8 @@
                 <input placeholder="Email" type="email" required />
                 <input placeholder="Subject" type="text" required />
                 <textarea placeholder="Message"></textarea>
-                <input class="formBtn" type="submit" />
-                <input class="formBtn" type="reset" />
+                <input class="formBtn1" type="submit" />
+                <input class="formBtn2" type="reset" />
             </form>
 </div>
     
