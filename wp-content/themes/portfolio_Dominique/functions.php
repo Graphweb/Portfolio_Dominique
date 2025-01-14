@@ -66,21 +66,17 @@ function portfolio_register_templates() {
 }
 add_action('template_redirect', 'portfolio_register_templates');
 
-/******************************* CHARGER PLUS AJAX ******************************************** */
-
-function load_more_projets() { 
-    // Vérifie que les paramètres nécessaires sont présents
+/**************** CHARGER PLUS *****************/
+function load_more_projets() {
     if (!isset($_POST['page']) || !isset($_POST['posts_per_page'])) {
         wp_send_json_error(['message' => 'Paramètres manquants.']);
     }
 
-    // Récupère les paramètres
     $page = intval($_POST['page']);
     $posts_per_page = intval($_POST['posts_per_page']);
 
-    // Arguments de la requête
     $args = array(
-        'post_type'      => 'projets', // Assurez-vous que le post_type est bien "projets"
+        'post_type'      => 'projets', 
         'posts_per_page' => $posts_per_page,
         'paged'          => $page,
         'orderby'        => 'date',
@@ -90,51 +86,59 @@ function load_more_projets() {
     $query = new WP_Query($args);
 
     if ($query->have_posts()) :
-        ob_start(); // Capture le contenu HTML
-        while ($query->have_posts()) : $query->the_post(); ?>
-             <article class="projet-item">
-            <div class="projet-wrapper">
-                <?php 
-                if (has_post_thumbnail()) {
-                    the_post_thumbnail('original', [
-                        'class' => 'projet-thumbnail',
-                        'alt'   => esc_attr(get_the_title()),
-                        'data-category' => $category_name,
-                    ]);
-                } else {
-                    echo '<img src="' . get_stylesheet_directory_uri() . '/Images/placeholder.jpg" alt="Image non disponible" class="projet-thumbnail" data-category="' . $category_name . '">';
-                }
-                ?>
-                <div class="projet-overlay">
-                    <div class="projet-info">
-                        <h3 class="projet-title"><?php the_title(); ?></h3>
-                        <p class="projet-category"><?php echo $category_name; ?></p>
-                    </div>
-                    <div class="projet-icons">
-                         <!-- Icône pour aller à la page single-photo.php -->
-                         <a href="<?php the_permalink(); ?>" class="icon icon-view" aria-label="Voir la page">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <!-- Icône pour ouvrir la lightbox -->
-                        <a href="#" class="icon icon-lightbox" data-photo-id="<?php echo get_the_ID(); ?>" aria-label="Voir dans la lightbox">
-                            <i class="fas fa-expand"></i>
-                        </a>
+        ob_start();
+        while ($query->have_posts()) : $query->the_post();
+
+            // Récupérer les catégories associées
+            $categories = get_the_terms(get_the_ID(), 'categorie'); // Changez 'category' si nécessaire
+            if (!empty($categories) && !is_wp_error($categories)) {
+                $category_name = esc_html($categories[0]->name);
+            } else {
+                $category_name = 'Non catégorisé';
+            }
+            ?>
+            <article class="projet-item">
+                <div class="projet-wrapper">
+                    <?php 
+                    if (has_post_thumbnail()) {
+                        the_post_thumbnail('original', [
+                            'class' => 'projet-thumbnail',
+                            'alt'   => esc_attr(get_the_title()),
+                            'data-category' => $category_name,
+                        ]);
+                    } else {
+                        echo '<img src="' . get_stylesheet_directory_uri() . '/Images/placeholder.jpg" alt="Image non disponible" class="projet-thumbnail" data-category="' . $category_name . '">';
+                    }
+                    ?>
+                    <div class="projet-overlay">
+                        <div class="projet-info">
+                            <h3 class="projet-title"><?php the_title(); ?></h3>
+                            <p class="projet-category"><?php echo $category_name; ?></p>
+                        </div>
+                        <div class="projet-icons">
+                            <a href="<?php the_permalink(); ?>" class="icon icon-view" aria-label="Voir la page">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="#" class="icon icon-lightbox" data-photo-id="<?php echo get_the_ID(); ?>" aria-label="Voir dans la lightbox">
+                                <i class="fas fa-expand"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </article>
-        <?php endwhile;
-        $content = ob_get_clean(); // Récupère le contenu généré
-        wp_send_json_success($content); // Renvoie le contenu sous forme JSON
+            </article>
+            <?php
+        endwhile;
+        $content = ob_get_clean();
+        wp_send_json_success($content);
     else :
         wp_send_json_error(['message' => 'Aucun projet trouvé.']);
     endif;
 
     wp_reset_postdata();
-    wp_die(); // Termine proprement le script
+    wp_die();
 }
-add_action('wp_ajax_load_more_projets', 'load_more_projets'); // Renommer l'action en "load_more_projets"
-add_action('wp_ajax_nopriv_load_more_projets', 'load_more_projets'); // Renommer pour les utilisateurs non connectés
+add_action('wp_ajax_load_more_projets', 'load_more_projets');
+add_action('wp_ajax_nopriv_load_more_projets', 'load_more_projets');
 
 
 /*************************************************** */
@@ -146,3 +150,46 @@ function enqueue_load_more_script() {
     wp_localize_script('load-more-projets', 'ajaxurl', admin_url('admin-ajax.php')); // Utiliser le même nom de script
 }
 add_action('wp_enqueue_scripts', 'enqueue_load_more_script');
+
+
+/********************* FORMULAIRE CONTACTE *************************/
+
+// Fonction pour gérer l'envoi de l'email
+function send_contact_email() {
+    // Parse les données du formulaire
+    parse_str($_POST['formData'], $formData);
+
+    $name = sanitize_text_field($formData['name']);
+    $email = sanitize_email($formData['email']);
+    $message = sanitize_textarea_field($formData['message']);
+
+    // Adresse email de l'administrateur
+    $admin_email = get_option('admin_email');
+
+    // Vérifie si toutes les données sont valides
+    if (empty($name) || empty($email) || empty($message)) {
+        wp_send_json_error(['message' => 'Tous les champs sont obligatoires.']);
+    }
+
+    // Prépare l'email
+    $subject = "Nouveau message de contact";
+    $body = "Nom : $name\nEmail : $email\nMessage :\n$message";
+    $headers = ['Content-Type: text/plain; charset=UTF-8', "Reply-To: $email"];
+
+    // Envoie l'email
+    if (wp_mail($admin_email, $subject, $body, $headers)) {
+        wp_send_json_success(['message' => 'Email envoyé avec succès !']);
+    } else {
+        wp_send_json_error(['message' => "Impossible d'envoyer l'email."]);
+    }
+
+    wp_die(); // Termine correctement le script
+}
+
+// Ajoute l'action pour WordPress Ajax
+add_action('wp_ajax_send_contact_email', 'send_contact_email');
+add_action('wp_ajax_nopriv_send_contact_email', 'send_contact_email'); // Pour les utilisateurs non connectés
+
+
+
+

@@ -9,125 +9,61 @@
     <h1><?php the_title(); ?></h1>
     
 
-       <?php 
-        // Afficher la référence
-        if (function_exists('get_field') && $reference = get_field('reference')) {
-            echo '<p><strong>Référence :</strong> ' . esc_html($reference) . '</p>';
-        }
-        // Afficher les catégories
-        if ($categories = get_the_terms(get_the_ID(), 'categorie')) {
-            echo '<p><strong>Catégorie :</strong> ';
-            echo implode(', ', wp_list_pluck($categories, 'name'));
-            echo '</p>';
-        }
-        // Afficher les formats
-        if ($formats = get_the_terms(get_the_ID(), 'format')) {
-            echo '<p><strong>Format :</strong> ';
-            echo implode(', ', wp_list_pluck($formats, 'name'));
-            echo '</p>';
-        }
-        // Afficher le type
-        if (function_exists('get_field') && $type = get_field('type')) {
-            echo '<p><strong>Type :</strong> ' . esc_html($type) . '</p>';
-        }
-        ?>
-        <p><strong>Année :</strong> <?php echo get_the_date('Y'); ?></p>
-    </div>
-     <!-- Afficher la photo -->
-    <div class="photo-image">
-        <?php 
-        if (has_post_thumbnail()) {
-            the_post_thumbnail('original', ['class' => 'photo-display']);
-        } 
-        ?>
+    <?php 
+    
+    // Afficher les catégories
+    if ($categories = get_the_terms(get_the_ID(), 'categorie')) {
+        echo '<p><strong>Catégorie :</strong> ';
+        echo implode(', ', wp_list_pluck($categories, 'name'));
+        echo '</p>';
+    }
+
+    // Afficher l'URL du projet
+    if (function_exists('get_field') && $url_du_projet = get_field('url_du_projet')) {
+        echo '<p><strong>URL du projet :</strong> <a href="' . esc_url($url_du_projet) . '" target="_blank">' . esc_url($url_du_projet) . '</a></p>';
+    }
+
+    // Afficher la description
+    if (function_exists('get_field') && $description = get_field('description')) {
+        echo '<p><strong>Description :</strong> ' . esc_html($description) . '</p>';
+    }
+
+    // Afficher les technologies utilisées
+    if (function_exists('get_field') && $technologies = get_field('technologies_utilisees')) {
+        echo '<p><strong>Technologies utilisées :</strong> ' . esc_html($technologies) . '</p>';
+    }
+    // Afficher l'année
+    echo '<p><strong>Année :</strong> ' . get_the_date('Y') . '</p>';
+?>
+
+<!-- Afficher la photo -->
+<div class="photo-image">
+    <?php 
+    if (has_post_thumbnail()) {
+        the_post_thumbnail('original', ['class' => 'photo-display']);
+    } 
+    ?>
+</div>
+
     </div>
 </article>
 <section class="pagination-btn">
     <div class="info">
-        <p>Cette photo vous intéresse ?</p>
+        <p>Un projet en tête ?</p>
     </div>
-<div id="contact">Contact</div>
+    <div class="contact-button" id="contact">Contact</div>
 
-    <div id="contactForm">
-
-        <h1>Keep in touch!</h1>
-        <small>I'll get back to you as quickly as possible</small>
-  
-            <form action="#">
-                <input placeholder="Name" type="text" required />
-                <input placeholder="Email" type="email" required />
-                <input placeholder="Subject" type="text" required />
-                <textarea placeholder="Message"></textarea>
-                <input class="formBtn1" type="submit" />
-                <input class="formBtn2" type="reset" />
-            </form>
-</div>
-    
-    </section>
-    <!-- Navigation entre les photos -->
-    <section class="photo-navigation">
-    <!-- Lien pour la photo précédente -->
-    <div class="prev-photo">
-        <?php 
-        $prev_post = get_previous_post(true, '', 'categorie'); 
-        if (!empty($prev_post)) : ?>
-            <a href="<?php echo get_permalink($prev_post->ID); ?>" class="nav-link prev-link">
-                <span class="arrow">←</span>
-                <div class="thumbnail-hover">
-                    <?php echo get_the_post_thumbnail($prev_post->ID, 'thumbnail', ['class' => 'hover-thumbnail']); ?>
-                </div>
-            </a>
-        <?php endif; ?>
-    </div>
-
-    <!-- Lien pour la photo suivante -->
-    <div class="next-photo">
-        <?php 
-        $next_post = get_next_post(true, '', 'categorie'); 
-        if (!empty($next_post)) : ?>
-            <a href="<?php echo get_permalink($next_post->ID); ?>" class="nav-link next-link">
-                <span class="arrow">→</span>
-                <div class="thumbnail-hover1">
-                    <?php echo get_the_post_thumbnail($next_post->ID, 'thumbnail', ['class' => 'hover-thumbnail']); ?>
-                </div>
-            </a>
-        <?php endif; ?>
+    <div class="contact-form-container" id="contactFormContainer">
+        <h2>Un café s'il te plaît !</h2>
+        <small>Venez discuter de votre projet !</small>
+        <form id="contactForm" method="post">
+            <input placeholder="Nom" type="text" name="name" required />
+            <input placeholder="Email" type="email" name="email" required />
+            <textarea placeholder="Message" name="message" required></textarea>
+            <button class="contact-form-button" type="submit">Envoyer</button>
+        </form>
     </div>
 </section>
-
-
-<!-- Section des photos apparentées -->
-<section class="related-photos">
-    <h2>VOUS AIMEREZ AUSSI</h2>
-    <div class="related-photos-gallery">
-        <?php
-        // Afficher les photos apparentées
-        $related_args = array(
-            'post_type' => 'photo',
-            'posts_per_page' => 2,
-            'post__not_in' => array(get_the_ID()),
-            'tax_query' => array(
-                array(
-                    'taxonomy' => 'categorie',
-                    'field'    => 'id',
-                    'terms'    => wp_list_pluck($categories, 'term_id'),
-                ),
-            ),
-        );
-        $related_query = new WP_Query($related_args);
-        if ($related_query->have_posts()) :
-            while ($related_query->have_posts()) : $related_query->the_post();
-                get_template_part('templates_part/photo_block');
-            endwhile;
-            wp_reset_postdata();
-        else :
-            echo '<p>Aucune photo apparentée trouvée.</p>';
-        endif;
-        ?>
-    </div>
-</section>
-
-
 <?php endwhile; endif; ?>
 
 <?php get_footer(); ?>
