@@ -38,9 +38,8 @@
         <!-- Menu mobile masqué par défaut -->
         <div class="mobile-menu" id="mobileMenu">
             <ul>
-                <li><a href="http://portfolio.local/" id="#mes-projets">Accueil</a></li>
-                <li><a href="http://portfolio.local/" id="#about-section">À propos</a></li>
-                <li><a href="http://portfolio.local/" id="#">Contact</a></li>
+                <li><a href="http://portfolio-dominique.qasu7107.odns.fr/portfolio_db/" id="#mes-projets">Accueil</a></li>
+                <li><a href="http://portfolio-dominique.qasu7107.odns.fr/portfolio_db/" id="#about-section">À propos</a></li>
             </ul>
     </nav>
 </header>          
