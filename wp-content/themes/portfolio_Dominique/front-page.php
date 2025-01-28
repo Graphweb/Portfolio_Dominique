@@ -1,7 +1,6 @@
 <?php
 get_header();
 ?>
-<!-- // Ajouter le Hero Banner // -->
 
 <section class="hero-banner " style="background-image: url('<?php echo get_random_hero_image(); ?>');">
    

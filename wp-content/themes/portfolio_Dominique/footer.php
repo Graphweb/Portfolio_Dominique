@@ -12,7 +12,7 @@
     <!-- Bouton précédente -->
     <button class="lightbox-prev">
       <span class="arrow"></span>
-      <span class="text">Précédente</span>
+      <span class="text"></span>
     </button>
     <!-- Image affichée -->
     <img class="lightbox-image" src="" alt="">
@@ -23,7 +23,7 @@
     </div>
     <!-- Bouton suivante -->
     <button class="lightbox-next">
-    <span class="text">Suivante</span>
+    <span class="text"></span>
       <span class="arrow"></span>
     </button>
   </div>
@@ -34,6 +34,5 @@
 <?php wp_footer(); ?>
 </footer>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </body>
 </html>
