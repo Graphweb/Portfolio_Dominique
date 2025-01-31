@@ -156,40 +156,55 @@ add_action('wp_enqueue_scripts', 'enqueue_load_more_script');
 
 // Fonction pour gérer l'envoi de l'email
 function send_contact_email() {
-    // Parse les données du formulaire
-    parse_str($_POST['formData'], $formData);
+    if (!isset($_POST['formData'])) {
+        wp_send_json_error(['message' => 'Données manquantes.']);
+    }
 
+    $formData = $_POST['formData'];
     $name = sanitize_text_field($formData['name']);
     $email = sanitize_email($formData['email']);
     $message = sanitize_textarea_field($formData['message']);
 
-    // Adresse email de l'administrateur
-    $admin_email = get_option('admin_email');
-
-    // Vérifie si toutes les données sont valides
     if (empty($name) || empty($email) || empty($message)) {
         wp_send_json_error(['message' => 'Tous les champs sont obligatoires.']);
     }
 
-    // Prépare l'email
+    $admin_email = get_option('admin_email');
     $subject = "Nouveau message de contact";
     $body = "Nom : $name\nEmail : $email\nMessage :\n$message";
     $headers = ['Content-Type: text/plain; charset=UTF-8', "Reply-To: $email"];
 
-    // Envoie l'email
     if (wp_mail($admin_email, $subject, $body, $headers)) {
         wp_send_json_success(['message' => 'Email envoyé avec succès !']);
     } else {
         wp_send_json_error(['message' => "Impossible d'envoyer l'email."]);
     }
 
-    wp_die(); // Termine correctement le script
+    wp_die();
 }
 
-// Ajoute l'action pour WordPress Ajax
+// Ajout des actions AJAX
 add_action('wp_ajax_send_contact_email', 'send_contact_email');
-add_action('wp_ajax_nopriv_send_contact_email', 'send_contact_email'); // Pour les utilisateurs non connectés
+add_action('wp_ajax_nopriv_send_contact_email', 'send_contact_email');
+
+// Test de wp_mail()
+// add_action('wp_footer', function () {
+//     $admin_email = get_option('admin_email');
+//     $test = wp_mail($admin_email, 'Test Email', 'Ceci est un test de wp_mail()');
+
+//     if ($test) {
+//         echo '<script>console.log("✅ Email de test envoyé avec succès.");</script>';
+//     } else {
+//         echo '<script>console.log("❌ Échec de l\'envoi de l\'email.");</script>';
+//     }
+// });
 
 
 
 
+
+function enqueue_custom_scripts() {
+    wp_enqueue_script('jquery');
+    wp_localize_script('jquery', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+}
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');

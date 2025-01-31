@@ -903,10 +903,16 @@ body.no-scroll {
   }
   
   #load-more-projets{
-    margin-left: 30%;
+    margin-left: 25%;
     margin-top: 50px;
-    width: 40%;
+    width: 55%;
   }
+  #load-more-projets:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    width: 60%;
+}
+
   .icon-view {
     top: -50px;
     left: auto;
@@ -983,6 +989,9 @@ body.no-scroll {
 .mes-projet h2 {
   margin-bottom: 50px;
   margin-top: -90px;
+}
+.contact-form-container{
+  width: 82vw !important;
 }
 }
 

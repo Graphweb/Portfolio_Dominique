@@ -1,6 +1,8 @@
 /********** FORMULAIRE CONTACT **********/
 
 jQuery(function ($) {
+    var ajaxUrl = ajax_object.ajax_url;
+
     // Affichage/masquage du formulaire
     $('#contact').click(function () {
         $('#contactFormContainer').fadeToggle();
@@ -9,7 +11,6 @@ jQuery(function ($) {
     // Masquer le formulaire si on clique en dehors
     $(document).mouseup(function (e) {
         var container = $("#contactFormContainer");
-
         if (!container.is(e.target) && container.has(e.target).length === 0) {
             container.fadeOut();
         }
@@ -17,31 +18,38 @@ jQuery(function ($) {
 
     // Gestion de la soumission du formulaire avec Ajax
     $('#contactForm').on('submit', function (e) {
-        e.preventDefault(); // Empêche le rechargement de la page
-        const formData = $(this).serialize(); // Récupère les données du formulaire
+        e.preventDefault();
+
+        const formData = {
+            name: $('input[name="name"]').val(),
+            email: $('input[name="email"]').val(),
+            message: $('textarea[name="message"]').val(),
+        };
 
         $.ajax({
-            url: "<?php echo admin_url('admin-ajax.php'); ?>", // L'URL WordPress Ajax
+            url: ajaxUrl,
             type: "POST",
             data: {
-                action: "send_contact_email", // Nom de l'action définie dans WordPress
+                action: "send_contact_email",
                 formData: formData,
             },
             success: function (response) {
                 if (response.success) {
                     alert("Message envoyé avec succès !");
-                    $('#contactForm')[0].reset(); // Réinitialise le formulaire
-                    $('#contactFormContainer').fadeOut(); // Masque le formulaire
+                    $('#contactForm')[0].reset();
+                    $('#contactFormContainer').fadeOut();
                 } else {
                     alert("Erreur : " + response.data.message);
                 }
             },
-            error: function () {
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("AJAX Error: " + textStatus, errorThrown);
                 alert("Une erreur est survenue. Veuillez réessayer.");
             }
         });
     });
 });
+
 
 /************************* BANDE LOGO *************************************/
 document.addEventListener('DOMContentLoaded', function () {

@@ -53,7 +53,7 @@
     </div>
     <div class="contact-button" id="contact">Contact</div>
 
-    <div class="contact-form-container" id="contactFormContainer">
+    <div class="contact-form-container" id="contactFormContainer" style="display: none;">
         <h2>Un café s'il te plaît !</h2>
         <small>Venez discuter de votre projet !</small>
         <form id="contactForm" method="post">
@@ -64,7 +64,6 @@
         </form>
     </div>
 </section>
-
 <?php endwhile; endif; ?>
 
 <?php get_footer(); ?>
