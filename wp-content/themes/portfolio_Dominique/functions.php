@@ -164,9 +164,24 @@ function send_contact_email() {
     $name = sanitize_text_field($formData['name']);
     $email = sanitize_email($formData['email']);
     $message = sanitize_textarea_field($formData['message']);
+    $recaptcha = $formData['recaptcha'];
 
     if (empty($name) || empty($email) || empty($message)) {
         wp_send_json_error(['message' => 'Tous les champs sont obligatoires.']);
+    }
+     // Vérification du token reCAPTCHA
+     $response = wp_remote_post("https://www.google.com/recaptcha/api/siteverify", [
+        'body' => [
+            'secret' => RECAPTCHA_SECRET_KEY,
+            'response' => $recaptcha,
+        ]
+    ]);
+
+    $responseBody = wp_remote_retrieve_body($response);
+    $result = json_decode($responseBody, true);
+
+    if (!$result['success'] || $result['score'] < 0.5) {
+        wp_send_json_error(['message' => 'Vérification reCAPTCHA échouée.']);
     }
 
     $admin_email = get_option('admin_email');

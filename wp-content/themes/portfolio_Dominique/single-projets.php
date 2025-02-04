@@ -60,6 +60,8 @@
             <input placeholder="Nom" type="text" name="name" required />
             <input placeholder="Email" type="email" name="email" required />
             <textarea placeholder="Message" name="message" required></textarea>
+            <!-- Champ caché pour reCAPTCHA -->
+            <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
             <button class="contact-form-button" type="submit">Envoyer</button>
         </form>
     </div>

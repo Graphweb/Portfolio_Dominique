@@ -34,5 +34,6 @@
 <?php wp_footer(); ?>
 </footer>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=6Lc2pMwqAAAAAHbk-fAO6GkopRxMy-2f3OX83Pus"></script>
 </body>
 </html>

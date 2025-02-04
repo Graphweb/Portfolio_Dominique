@@ -20,10 +20,15 @@ jQuery(function ($) {
     $('#contactForm').on('submit', function (e) {
         e.preventDefault();
 
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6Lc2pMwqAAAAAHbk-fAO6GkopRxMy-2f3OX83Pus', { action: 'submit' }).then(function (token) {
+                $('#g-recaptcha-response').val(token);
+
         const formData = {
             name: $('input[name="name"]').val(),
             email: $('input[name="email"]').val(),
             message: $('textarea[name="message"]').val(),
+            recaptcha: token, // On envoie le token reCAPTCHA
         };
 
         $.ajax({
@@ -48,6 +53,8 @@ jQuery(function ($) {
             }
         });
     });
+});
+});
 });
 
 
